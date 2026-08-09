@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "cmdk": "^1.1.1",
     "framer-motion": "^13.0.0",
     "lucide-react": "^0.383.0",
     "react": "^19.2.8",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.2.8",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.18.2",
     "tailwindcss": "^4.3.3"
   },
