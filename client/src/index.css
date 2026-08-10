@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --color-aurora-1: #6366f1;
+  --font-display: "Geist", sans-serif;
+  --font-body: "Geist", sans-serif;
+  --color-aurora-1: #c2a4ff;
   --color-aurora-2: #a855f7;
   --color-aurora-3: #ec4899;
-  --color-aurora-4: #06b6d4;
-  --color-ink: #0a0a12;
-  --color-ink-soft: #14141f;
+  --color-aurora-4: #8b5cf6;
+  --color-ink: #0b080c;
+  --color-ink-soft: #14101a;
   --color-paper: #fafaff;
+  --color-accent: #c2a4ff;
 }
 
 * {
@@ -25,6 +26,7 @@
 body {
   font-family: var(--font-body);
   background-color: var(--color-paper);
+  color: #eae5ec;
   transition: background-color 0.5s ease;
 }
 
