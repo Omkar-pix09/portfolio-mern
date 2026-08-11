@@ -1,7 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import CountUp from "react-countup";
 import { GraduationCap, Award, Code2, Sparkles } from "lucide-react";
+
+function AnimatedNumber({ value, decimals = 0 }) {
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    const duration = 2000;
+    const startTime = performance.now();
+    let frame;
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      setDisplay(value * progress);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    }
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value]);
+
+  return <>{display.toFixed(decimals)}</>;
+}
 
 function TypewriterText({ text, className }) {
   const [displayed, setDisplayed] = useState("");
@@ -34,10 +54,10 @@ export default function About() {
   ];
 
   const focusAreas = [
-    { icon: <Code2 size={18} />, label: "Full-Stack Dev", pct: 90 },
-    { icon: <Sparkles size={18} />, label: "Machine Learning", pct: 75 },
+    { icon: <Code2 size={18} />, label: "Full-Stack Dev", pct: 75 },
+    { icon: <Sparkles size={18} />, label: "Machine Learning", pct: 90 },
     { icon: <GraduationCap size={18} />, label: "System Design", pct: 65 },
-    { icon: <Award size={18} />, label: "DSA", pct: 80 },
+    { icon: <Award size={18} />, label: "DSA", pct: 60 },
   ];
 
   const tags = ["React", "Node.js", "MongoDB", "Python", "XGBoost", "AWS", "Docker", "Java", "Kotlin"];
@@ -88,7 +108,7 @@ export default function About() {
                 <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} whileHover={{ scale: 1.05 }} className="relative p-4 rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent overflow-hidden group">
                   <div className="absolute inset-0 bg-purple-500/0 group-hover:bg-purple-500/5 transition-colors" />
                   <p className="text-2xl md:text-3xl font-bold gradient-text font-display">
-                    <CountUp end={s.value} duration={2} decimals={s.decimals || 0} enableScrollSpy scrollSpyOnce />
+                    <AnimatedNumber value={s.value} decimals={s.decimals || 0} />
                     {s.suffix}
                   </p>
                   <p className="text-xs text-white/40 mt-1">{s.label}</p>
