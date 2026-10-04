@@ -1,32 +1,14 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { projects } from "../data/projects";
 import ProjectCard from "./ProjectCard";
-
-function StatusLine() {
-  const messages = ["INDEXING REPOSITORIES...", `${projects.length} PROJECTS COMPILED`, "BUILD STATUS: PASSING", "HOVER TO DECRYPT"];
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => setIndex((i) => (i + 1) % messages.length), 2200);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="flex items-center justify-center gap-2 font-mono text-xs text-cyan-300/70">
-      <motion.span className="w-1.5 h-1.5 rounded-full bg-cyan-400" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }} />
-      <motion.span key={index} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-        {messages[index]}
-      </motion.span>
-    </div>
-  );
-}
+import { Terminal } from "lucide-react";
 
 export default function Projects() {
   return (
-    <section id="projects" className="relative py-32 px-6 md:px-16 bg-[#0b080c] overflow-hidden">
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[150px] opacity-20 bg-cyan-500 pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[150px] opacity-15 bg-orange-500 pointer-events-none" />
+    <section id="projects" className="relative py-28 md:py-32 px-5 sm:px-8 md:px-16 bg-[#0b080c] overflow-hidden">
+      {/* Subtle bounded ambient glow */}
+      <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] rounded-full blur-[160px] opacity-15 bg-[#8b5cf6] pointer-events-none" />
+      <div className="absolute bottom-10 -left-32 w-[450px] h-[450px] rounded-full blur-[160px] opacity-15 bg-[#ec4899] pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
@@ -34,16 +16,25 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-6"
+          className="text-center mb-12"
         >
-          <p className="text-cyan-400 font-mono text-sm tracking-wider mb-3">// PROJECTS.deploy()</p>
-          <h2 className="text-4xl md:text-6xl font-bold font-display bg-gradient-to-r from-cyan-300 via-teal-300 to-orange-300 bg-clip-text text-transparent mb-4">
-            Things I've Built
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#c2a4ff]/20 bg-[#c2a4ff]/10 mb-3">
+            <Terminal size={12} className="text-[#c2a4ff]" />
+            <span className="text-[11px] font-mono tracking-wider text-[#c2a4ff] uppercase font-semibold">
+              EVALUATION REPORT // VALIDATED DEPLOYMENTS
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-3">
+            Featured Systems & Models
           </h2>
-          <StatusLine />
+
+          <p className="text-xs sm:text-sm font-mono text-white/50 max-w-lg mx-auto">
+            Live architectures with benchmarked validation scores and inference profiles
+          </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-14">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}

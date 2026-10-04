@@ -1,57 +1,30 @@
 import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Github, ExternalLink, Cpu } from "lucide-react";
-
-const CHARS = "!<>-_\\/[]{}—=+*^?#________";
-
-function DecryptText({ text, active, className }) {
-  const [display, setDisplay] = useState(text);
-
-  useEffect(() => {
-    if (!active) {
-      setDisplay(text);
-      return;
-    }
-    let frame = 0;
-    const totalFrames = 18;
-    const interval = setInterval(() => {
-      frame++;
-      const revealCount = Math.floor((frame / totalFrames) * text.length);
-      setDisplay(
-        text
-          .split("")
-          .map((ch, i) => {
-            if (ch === " ") return " ";
-            if (i < revealCount) return text[i];
-            return CHARS[Math.floor(Math.random() * CHARS.length)];
-          })
-          .join("")
-      );
-      if (frame >= totalFrames) {
-        setDisplay(text);
-        clearInterval(interval);
-      }
-    }, 35);
-    return () => clearInterval(interval);
-  }, [active, text]);
-
-  return <span className={className}>{display}</span>;
-}
+import { Github, ExternalLink, Activity, Gauge } from "lucide-react";
 
 export default function ProjectCard({ project, index }) {
   const ref = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [mousePct, setMousePct] = useState({ x: 50, y: 50 });
   const [hover, setHover] = useState(false);
-  const color = project.color || "#22d3ee";
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const color = project.color || "#c2a4ff";
+
+  useEffect(() => {
+    const q = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(q.matches);
+    const handler = (e) => setReducedMotion(e.matches);
+    q.addEventListener("change", handler);
+    return () => q.removeEventListener("change", handler);
+  }, []);
 
   const handleMove = (e) => {
+    if (reducedMotion) return;
     const rect = ref.current.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: py * -10, y: px * 10 });
-    setMousePct({ x: ((e.clientX - rect.left) / rect.width) * 100, y: ((e.clientY - rect.top) / rect.height) * 100 });
+    setTilt({ x: py * -8, y: px * 8 });
   };
+
   const reset = () => {
     setTilt({ x: 0, y: 0 });
     setHover(false);
@@ -59,10 +32,10 @@ export default function ProjectCard({ project, index }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: reducedMotion ? 0 : 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.12 }}
+      transition={{ duration: reducedMotion ? 0.2 : 0.5, delay: reducedMotion ? 0 : index * 0.1 }}
       style={{ perspective: 1000 }}
     >
       <motion.div
@@ -70,89 +43,102 @@ export default function ProjectCard({ project, index }) {
         onMouseMove={handleMove}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={reset}
-        animate={{ rotateX: tilt.x, rotateY: tilt.y, scale: hover ? 1.02 : 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 18 }}
+        animate={{
+          rotateX: reducedMotion ? 0 : tilt.x,
+          rotateY: reducedMotion ? 0 : tilt.y,
+          scale: hover && !reducedMotion ? 1.015 : 1,
+        }}
+        transition={{ type: "spring", stiffness: 220, damping: 20 }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative rounded-2xl p-[1.5px] overflow-hidden cursor-pointer"
+        className="relative rounded-2xl p-[1px] overflow-hidden group h-full flex flex-col"
       >
-        {/* rotating conic-gradient holographic border */}
-        <motion.div
-          className="absolute inset-0 rounded-2xl"
+        {/* Subtle border glow on hover */}
+        <div
+          className="absolute inset-0 rounded-2xl transition-opacity duration-300"
           style={{
-            background: `conic-gradient(from 0deg, ${color}, transparent 30%, transparent 70%, ${color})`,
-            opacity: hover ? 1 : 0.35,
+            background: `linear-gradient(135deg, ${color}50, transparent 60%)`,
+            opacity: hover ? 1 : 0.25,
           }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
         />
 
-        <div className="relative rounded-2xl bg-[#0b080c]/95 backdrop-blur-sm p-6 overflow-hidden h-full">
-          {/* holographic sheen following cursor */}
-          <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-            style={{
-              opacity: hover ? 0.5 : 0,
-              background: `radial-gradient(300px circle at ${mousePct.x}% ${mousePct.y}%, ${color}25, transparent 60%)`,
-            }}
-          />
-          {/* scanline texture */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-[0.04]"
-            style={{ backgroundImage: `repeating-linear-gradient(0deg, ${color}, ${color} 1px, transparent 1px, transparent 3px)` }}
-          />
-
-          <div className="relative z-10" style={{ transform: "translateZ(20px)" }}>
-            {/* HUD header */}
+        <div className="relative rounded-2xl bg-[#0b080c]/95 border border-white/10 p-6 flex-1 flex flex-col justify-between overflow-hidden">
+          <div>
+            {/* Top Metric Header */}
             <div className="flex items-center justify-between mb-4">
               <span
-                className="text-[10px] font-mono px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5"
-                style={{ backgroundColor: `${color}18`, color }}
+                className="text-[10px] font-mono px-2.5 py-1 rounded-full tracking-wider font-medium flex items-center gap-1.5"
+                style={{ backgroundColor: `${color}15`, color, border: `1px solid ${color}30` }}
               >
-                <Cpu size={11} />
+                <Activity size={11} />
                 {project.category}
               </span>
-              <motion.span
-                className="text-[10px] font-mono text-white/25"
-                animate={hover ? { opacity: [0.25, 0.6, 0.25] } : { opacity: 0.25 }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-              >
-                ID:0{project.id}
-              </motion.span>
+              <span className="text-[10px] font-mono text-white/40">
+                {project.releaseStatus}
+              </span>
             </div>
 
-            <h3 className="text-xl font-bold font-display text-white mb-2 min-h-[28px]">
-              <DecryptText text={project.title} active={hover} />
+            <h3 className="text-xl font-bold font-display text-white mb-2 tracking-tight group-hover:text-[#c2a4ff] transition-colors">
+              {project.title}
             </h3>
-            <p className="text-white/50 text-sm mb-5 leading-relaxed">{project.description}</p>
 
-            <div className="flex flex-wrap gap-2 mb-6">
+            <p className="text-white/60 text-xs md:text-sm mb-5 leading-relaxed font-sans">
+              {project.description}
+            </p>
+
+            {/* Tech Badges */}
+            <div className="flex flex-wrap gap-1.5 mb-6">
               {project.tech.map((t) => (
-                <span key={t} className="text-xs font-medium px-3 py-1 rounded-full border border-white/10 text-white/60">
+                <span
+                  key={t}
+                  className="text-[11px] font-mono px-2.5 py-0.5 rounded-lg border border-white/10 bg-white/[0.02] text-white/70"
+                >
                   {t}
                 </span>
               ))}
             </div>
+          </div>
 
-            {/* fake system readout, appears on hover */}
-            <div className="mb-5 h-4 overflow-hidden">
-              <motion.p
-                className="text-[10px] font-mono"
-                style={{ color }}
-                initial={{ y: 16, opacity: 0 }}
-                animate={hover ? { y: 0, opacity: 0.8 } : { y: 16, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {`> status: deployed · latency: ${12 + project.id * 3}ms · uptime: 99.${90 + project.id}%`}
-              </motion.p>
+          <div>
+            {/* Single Deliberate Detail: Model Evaluation Report */}
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 font-mono mb-5 space-y-1.5">
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-white/40 text-[10px] uppercase tracking-wider flex items-center gap-1">
+                  <Gauge size={11} className="text-[#c2a4ff]" />
+                  Validation Score
+                </span>
+                <span className="font-semibold text-white/90" style={{ color }}>
+                  {project.evalMetric}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/5">
+                <span className="text-white/40 text-[10px] uppercase tracking-wider">
+                  Inference Latency
+                </span>
+                <span className="text-white/70 font-medium">
+                  {project.latency}
+                </span>
+              </div>
             </div>
 
-            <div className="flex gap-4 pt-4 border-t border-white/10">
-              <a href={project.github} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors">
-                <Github size={16} /> Code
+            {/* Links */}
+            <div className="flex items-center gap-4 pt-3 border-t border-white/10 text-xs font-mono">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors cursor-pointer"
+              >
+                <Github size={14} /> Repository
               </a>
               {project.demo && (
-                <a href={project.demo} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors">
-                  <ExternalLink size={16} /> Live Demo
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 text-[#c2a4ff] hover:text-white transition-colors cursor-pointer"
+                >
+                  <ExternalLink size={14} /> Live System
                 </a>
               )}
             </div>
