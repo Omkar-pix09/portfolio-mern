@@ -68,7 +68,7 @@ function GlitchName() {
 }
 
 export default function Hero() {
-  const [visualMode, setVisualMode] = useState("embedding"); // 'embedding' | 'avatar'
+  const [visualMode, setVisualMode] = useState("avatar"); // 'avatar' | 'embedding'
 
   const container = {
     hidden: {},
