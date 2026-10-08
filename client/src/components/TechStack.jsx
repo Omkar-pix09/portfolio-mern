@@ -10,23 +10,23 @@ import {
 const techs = [
   { name: "Python", icon: SiPython, color: "#3776AB", level: 92 },
   { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", level: 90 },
-  { name: "TypeScript", icon: SiTypescript, color: "#3178C6", level: 78 },
+
   { name: "C", icon: SiC, color: "#A8B9CC", level: 75 },
   { name: "C++", icon: SiCplusplus, color: "#00599C", level: 70 },
   { name: "Kotlin", icon: SiKotlin, color: "#7F52FF", level: 65 },
   { name: "HTML5", icon: SiHtml5, color: "#E34F26", level: 95 },
   { name: "CSS3", icon: SiCss, color: "#1572B6", level: 88 },
-  { name: "Bash", icon: SiGnubash, color: "#4EAA25", level: 60 },
+ 
   { name: "React", icon: SiReact, color: "#61DAFB", level: 93 },
   { name: "Next.js", icon: SiNextdotjs, color: "#ffffff", level: 70 },
-  { name: "Bootstrap", icon: SiBootstrap, color: "#7952B3", level: 85 },
+  
   { name: "Node.js", icon: SiNodedotjs, color: "#339933", level: 88 },
   { name: "Flask", icon: SiFlask, color: "#ffffff", level: 68 },
   { name: "FastAPI", icon: SiFastapi, color: "#009688", level: 62 },
   { name: "TensorFlow", icon: SiTensorflow, color: "#FF6F00", level: 72 },
   { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C", level: 65 },
   { name: "Scikit-learn", icon: SiScikitlearn, color: "#F7931E", level: 80 },
-  { name: "OpenCV", icon: SiOpencv, color: "#5C3EE8", level: 60 },
+  
   { name: "NumPy", icon: SiNumpy, color: "#013243", level: 85 },
   { name: "Pandas", icon: SiPandas, color: "#150458", level: 88 },
   { name: "MySQL", icon: SiMysql, color: "#4479A1", level: 82 },
