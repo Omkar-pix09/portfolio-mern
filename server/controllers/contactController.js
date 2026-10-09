@@ -1,15 +1,25 @@
 import Message from '../models/Message.js';
-import nodemailer from 'nodemailer';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com', port: 465, secure: true, family: 4, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const sendNotification = async ({ name, email, message }) => {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Portfolio <onboarding@resend.dev>',
+      to: [process.env.EMAIL_USER],
+      reply_to: email,
+      subject: `New portfolio message from ${name.replace(/[\r\n]+/g, ' ')}`,
+      text: `From: ${name} (${email})\n\n${message}`,
+    }),
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
+};
 
 export const submitContact = async (req, res) => {
   try {
@@ -32,15 +42,9 @@ export const submitContact = async (req, res) => {
 
     const savedMessage = await Message.create({ name, email, message });
 
-    // Email failure should not make the visitor think the message was lost
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER,
-        replyTo: email,
-        subject: `New portfolio message from ${name.replace(/[\r\n]+/g, ' ')}`,
-        text: `From: ${name} (${email})\n\n${message}`,
-      });
+      await sendNotification({ name, email, message });
+      console.log('[Contact] Email sent');
     } catch (mailError) {
       console.error('[Contact] Email failed (message was saved):', mailError.message);
     }
