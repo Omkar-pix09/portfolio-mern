@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { FileText, Github, Linkedin, Mail, User, Network } from "lucide-react";
 import ProfileImage from "./ProfileImage";
@@ -239,7 +239,7 @@ export default function Hero() {
   };
  
   return (
-    <section id="hero" className="relative min-h-screen flex items-center px-5 sm:px-8 md:px-16 overflow-hidden bg-[#0b080c] py-28 md:py-20">
+    <section id="hero" className="relative min-h-[100svh] flex items-center px-5 sm:px-8 md:px-16 overflow-hidden bg-[#0b080c] py-28 md:py-20">
       {/* Background Ambient Plasma Lighting (strictly bounded) */}
       <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25 bg-[#8b5cf6] pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-[550px] h-[550px] rounded-full blur-[160px] opacity-20 bg-[#ec4899] pointer-events-none" />

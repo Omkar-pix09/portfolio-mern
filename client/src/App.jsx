@@ -18,7 +18,7 @@ function App() {
   const { darkMode, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-500 relative">
+    <div className="min-h-[100svh] bg-white dark:bg-slate-900 transition-colors duration-500 relative">
       <div className="noise-overlay" />
       <CustomCursor />
       <ScrollProgress />
