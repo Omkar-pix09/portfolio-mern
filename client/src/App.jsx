@@ -5,7 +5,7 @@ import About from "./components/About";
 import WhatIDo from "./components/WhatIDo";
 import TechStack from "./components/TechStack";
 import Skills from "./components/Skills";
-import Projects from "./components/Projects";
+import Projects from "./components/projects";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import CustomCursor from "./components/CustomCursor";
