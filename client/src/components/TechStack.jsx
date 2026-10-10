@@ -13,7 +13,7 @@ const techs = [
 
   { name: "C", icon: SiC, color: "#A8B9CC", level: 75 },
   { name: "C++", icon: SiCplusplus, color: "#00599C", level: 70 },
-  { name: "Kotlin", icon: SiKotlin, color: "#7F52FF", level: 65 },
+ 
   { name: "HTML5", icon: SiHtml5, color: "#E34F26", level: 95 },
   { name: "CSS3", icon: SiCss, color: "#1572B6", level: 88 },
  
@@ -30,13 +30,13 @@ const techs = [
   { name: "NumPy", icon: SiNumpy, color: "#013243", level: 85 },
   { name: "Pandas", icon: SiPandas, color: "#150458", level: 88 },
   { name: "MySQL", icon: SiMysql, color: "#4479A1", level: 82 },
-  { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1", level: 65 },
+ 
   { name: "MongoDB", icon: SiMongodb, color: "#47A248", level: 87 },
-  { name: "Redis", icon: SiRedis, color: "#DC382D", level: 55 },
+ 
   { name: "Docker", icon: SiDocker, color: "#2496ED", level: 70 },
   { name: "Git", icon: SiGit, color: "#F05032", level: 90 },
   { name: "GitHub", icon: SiGithub, color: "#ffffff", level: 92 },
-  { name: "Figma", icon: SiFigma, color: "#F24E1E", level: 60 },
+  
 ];
 
 function ScanCaption() {
